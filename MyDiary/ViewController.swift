@@ -19,12 +19,16 @@ class ViewController: UIViewController {
         }
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureCollectionView()
         self.loadDiaryList()
-        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(editDiaryNotification(_:)),
+            name: NSNotification.Name("editDiary"),
+            object: nil
+        )
     }
     
     private func configureCollectionView() {
@@ -33,6 +37,18 @@ class ViewController: UIViewController {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
     }
+    
+    
+    @objc func editDiaryNotification(_ notification: Notification) {
+        guard let diary = notification.object as? Diary else { return }
+        guard let row = notification.userInfo?["indexPath.row"] as? Int else { return }
+        self.diaryList[row] = diary
+        self.diaryList = self.diaryList.sorted(by: {
+            $0.date.compare($1.date) == .orderedDescending
+        })
+        self.collectionView.reloadData()
+    }
+    
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let writeDiaryViewController = segue.destination as? WriteDiaryViewController {
@@ -131,7 +147,7 @@ extension ViewController: UICollectionViewDelegate {
         
         let diary = self.diaryList[indexPath.row]
         viewController.diary = diary
-        viewController.indexpath = indexPath
+        viewController.indexPath = indexPath
         viewController.delegate = self
         self.navigationController?.pushViewController(viewController, animated: true)
     }

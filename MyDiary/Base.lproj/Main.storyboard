@@ -93,7 +93,7 @@
         <!--일기 작성-->
         <scene sceneID="s7s-we-nrt">
             <objects>
-                <viewController id="EDz-tb-sRf" customClass="WriteDiaryViewController" customModule="MyDiary" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WriteDiaryViewController" id="EDz-tb-sRf" customClass="WriteDiaryViewController" customModule="MyDiary" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oKG-Ln-gjW">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -176,7 +176,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EQl-eV-wEh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2148" y="-389"/>
+            <point key="canvasLocation" x="2426" y="-499"/>
         </scene>
         <!--즐겨찾기-->
         <scene sceneID="WX5-MZ-SAj">

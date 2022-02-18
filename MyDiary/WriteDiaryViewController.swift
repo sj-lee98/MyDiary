@@ -7,6 +7,12 @@
 
 import UIKit
 
+// 열거형 정의
+enum DiaryEditorMode {
+    case new
+    case edit(IndexPath, Diary)
+}
+
 protocol WriteDiaryViewDelegate: AnyObject {
     func didSelectRegister(diary: Diary)
 }
@@ -21,6 +27,7 @@ class WriteDiaryViewController: UIViewController {
     private let datePicker = UIDatePicker()
     private var diaryDate: Date?    //date에서 선택된 데이터 저장하는 프로퍼티
     weak var delegate: WriteDiaryViewDelegate?
+    var diaryEditorMode = DiaryEditorMode.new
     
     
     override func viewDidLoad() {
@@ -28,8 +35,34 @@ class WriteDiaryViewController: UIViewController {
         self.configureContentsTextView()
         self.configureDatePicker()
         self.configureInputField()
+        self.configureEditMode()
         self.confirmButton.isEnabled = false    //등록버튼 비활성화
     }
+    
+    
+    private func configureEditMode() {
+        switch self.diaryEditorMode {
+        case let.edit(_, diary):
+            self.titleTextField.text = diary.title
+            self.contentsTextView.text = diary.contents
+            self.dateTextField.text = self.dateToString(date: diary.date)
+            self.diaryDate = diary.date
+            self.confirmButton.title = "수정"
+            
+        default:
+            break
+        }
+    }
+    
+    
+    private func dateToString(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yy년 MM월 dd일(EEEEE)"
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter.string(from: date)
+    }
+    
+    
     
     //ContentsTextView에 경계선이 없어서 어색한 부분 해결
     private func configureContentsTextView() {
@@ -77,7 +110,21 @@ class WriteDiaryViewController: UIViewController {
         guard let contents = self.contentsTextView.text else { return }
         guard let date = self.diaryDate else { return }
         let diary = Diary(title: title, contents: contents, date: date, isStar: false)
-        self.delegate?.didSelectRegister(diary: diary)
+        
+        switch self.diaryEditorMode {
+        case .new:
+            self.delegate?.didSelectRegister(diary: diary)
+            
+        case let .edit(IndexPath, _):
+            NotificationCenter.default.post(
+                name: NSNotification.Name("editDiary"),
+                object: diary,
+                userInfo: [
+                    "indexPath.row": IndexPath.row
+                ]
+            )
+        }
+        
         self.navigationController?.popViewController(animated: true)
     }
     
