@@ -11,6 +11,9 @@ class DiaryCell: UICollectionViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
+
+
+    
     
     required init?(coder: NSCoder) {
         // 일기 cell 에 테두리 만들기
